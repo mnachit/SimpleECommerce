@@ -1,0 +1,32 @@
+# Server Configuration
+server:
+  port: 8090
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  cloud:
+    config:
+      import-check:
+        enabled: false
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/SimpleECommerce?createDatabaseIfNotExist=true
+    username: root
+    password:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+
+  liquibase:
+    change-log: classpath:./db/changelog/changelog-master.xml
+
+feign:
+  ancfcc:
+    endpoint: /api/auth/generateToken
