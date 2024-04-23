@@ -1,6 +1,6 @@
 # Server Configuration
 server:
-  port: 8090
+  port: 8070
   error:
     include-message: always
     include-binding-errors: always
@@ -26,7 +26,3 @@ spring:
 
   liquibase:
     change-log: classpath:./db/changelog/changelog-master.xml
-
-feign:
-  ancfcc:
-    endpoint: /api/auth/generateToken
