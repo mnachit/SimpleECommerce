@@ -3,7 +3,7 @@ package com.example.simpleecommerce.controller;
 import com.example.simpleecommerce.auth.JwtUtil;
 import com.example.simpleecommerce.model.entity.User;
 import com.example.simpleecommerce.model.mapper.UserMapper;
-import com.example.simpleecommerce.model.request.UserRegisterRequest;
+import com.example.simpleecommerce.model.dto.UserRegisterRequest;
 import com.example.simpleecommerce.model.response.ErrorRes;
 import com.example.simpleecommerce.service.UserService;
 import com.example.simpleecommerce.util.Response;
@@ -46,4 +46,26 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
+
+//    @PostMapping("/rest/auth/login")
+//    public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest)
+//    {
+//        Response<String> response = new Response<>();
+//        try {
+//            userService.findByEmailAndPassword(userLoginRequest.getEmail(), userLoginRequest.getPassword());
+////            Authentication authentication =
+////                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword()));
+//            User user = userService.findByEmail(userLoginRequest.getEmail());
+//            String token = jwtUtil.createToken(user);
+//            response.setResult(token);
+//            response.setMessage("Logged in successfully");
+//            return ResponseEntity.ok(response);
+//        } catch (BadCredentialsException e){
+//            ErrorRes errorResponse = new ErrorRes(HttpStatus.BAD_REQUEST,"Invalid email or password");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+//        } catch (jakarta.validation.ValidationException e){
+//            response.setMessage("User has not been logged in");
+//            return ResponseEntity.ok(response);
+//        }
+//    }
 }

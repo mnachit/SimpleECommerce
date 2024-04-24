@@ -1,4 +1,4 @@
-package com.example.simpleecommerce.model.request;
+package com.example.simpleecommerce.model.dto;
 
 import jdk.jfr.Enabled;
 import lombok.AllArgsConstructor;

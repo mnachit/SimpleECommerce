@@ -4,7 +4,7 @@ package com.example.simpleecommerce.model.mapper;
 //import com.example.simpleecommerce.model.dto.request.UserLoginRequest;
 //import com.example.simpleecommerce.model.dto.request.UserRegisterRequest;
 import com.example.simpleecommerce.model.entity.User;
-import com.example.simpleecommerce.model.request.UserRegisterRequest;
+import com.example.simpleecommerce.model.dto.UserRegisterRequest;
 
 public class UserMapper {
 //    public static User UserDtoResponsetoEntity(UserDtoResponse userDto) {
