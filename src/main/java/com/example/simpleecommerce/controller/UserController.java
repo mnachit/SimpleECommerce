@@ -1,6 +1,7 @@
 package com.example.simpleecommerce.controller;
 
 import com.example.simpleecommerce.auth.JwtUtil;
+import com.example.simpleecommerce.model.dto.UserLoginRequest;
 import com.example.simpleecommerce.model.entity.User;
 import com.example.simpleecommerce.model.mapper.UserMapper;
 import com.example.simpleecommerce.model.dto.UserRegisterRequest;
@@ -12,11 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -47,25 +47,41 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/rest/auth/login")
-//    public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest)
-//    {
-//        Response<String> response = new Response<>();
-//        try {
-//            userService.findByEmailAndPassword(userLoginRequest.getEmail(), userLoginRequest.getPassword());
-////            Authentication authentication =
-////                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword()));
-//            User user = userService.findByEmail(userLoginRequest.getEmail());
-//            String token = jwtUtil.createToken(user);
-//            response.setResult(token);
-//            response.setMessage("Logged in successfully");
-//            return ResponseEntity.ok(response);
-//        } catch (BadCredentialsException e){
-//            ErrorRes errorResponse = new ErrorRes(HttpStatus.BAD_REQUEST,"Invalid email or password");
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-//        } catch (jakarta.validation.ValidationException e){
-//            response.setMessage("User has not been logged in");
-//            return ResponseEntity.ok(response);
-//        }
-//    }
+    @PostMapping("/rest/auth/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest)
+    {
+        Response<String> response = new Response<>();
+        try {
+            userService.findByEmailAndPassword(userLoginRequest.getEmail(), userLoginRequest.getPassword());
+//            Authentication authentication =
+//                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword()));
+            User user = userService.findByEmail(userLoginRequest.getEmail());
+            String token = jwtUtil.createToken(user);
+            response.setResult(token);
+            response.setMessage("Logged in successfully");
+            return ResponseEntity.ok(response);
+        } catch (BadCredentialsException e){
+            ErrorRes errorResponse = new ErrorRes(HttpStatus.BAD_REQUEST,"Invalid email or password");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        } catch (jakarta.validation.ValidationException e){
+            response.setMessage("User has not been logged in");
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @PutMapping("/rest/update/user/{id}")
+    public ResponseEntity<?> updateUser(@RequestBody UserRegisterRequest userRegisterRequest, @PathVariable Long id)
+    {
+        Response<String> response = new Response<>();
+        try {
+            User user = UserMapper.UserRegisterRequestToEntity(userRegisterRequest);
+            user.setId(id);
+            userService.updateUser(user);
+            response.setMessage("User has been updated");
+            return ResponseEntity.ok(response);
+        } catch (jakarta.validation.ValidationException e){
+            response.setMessage("User has not been updated");
+            return ResponseEntity.ok(response);
+        }
+    }
 }

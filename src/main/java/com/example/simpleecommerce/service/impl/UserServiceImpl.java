@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -55,36 +56,80 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isPasswordValid(String rawPassword, String encodedPassword) {
-        return false;
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
     @Override
     public User updateUser(User user) throws ValidationException {
-        return null;
+        List<ErrorMessage> errorMessages = new ArrayList<>();
+        if (userRepository.findById(user.getId()).isEmpty())
+            errorMessages.add(ErrorMessage.builder().message("User not found").build());
+        if (userRepository.findByEmail(user.getEmail()).isPresent() && userRepository.findByEmail(user.getEmail()).get().getId() != user.getId())
+            errorMessages.add(ErrorMessage.builder().message("Email already exists").build());
+        if (userRepository.findByUsername(user.getUsername()).isPresent() && userRepository.findByUsername(user.getUsername()).get().getId() != user.getId())
+            errorMessages.add(ErrorMessage.builder().message("Username already exists").build());
+        if (errorMessages.size() > 0)
+            throw new ValidationException(errorMessages);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Date date = new Date();
+        user.setUpdatedAt(date);
+        userRepository.save(user);
+        return user;
     }
 
     @Override
-    public User findByEmail(String email) throws ValidationException {
-        return null;
+    public User findByEmail(String email) throws ValidationException{
+        if (userRepository.findByEmail(email).isEmpty()) {
+            throw new ValidationException(List.of(ErrorMessage.builder().message("Email not found").build()));
+        }
+
+        return userRepository.findByEmail(email).get();
     }
 
     @Override
     public boolean findByEmailAndPassword(String email, String password) throws ValidationException {
-        return false;
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        List<ErrorMessage> errorMessages1 = new ArrayList<>();
+        if (userOptional.isEmpty())
+            errorMessages1.add(ErrorMessage.builder().message("Email is incorrect").build());
+
+        User user = userOptional.get();
+        if (isPasswordValid(password, user.getPassword()) == false)
+            errorMessages1.add(ErrorMessage.builder().message("Password is incorrect").build());
+        if (errorMessages1.size() > 0)
+            throw new ValidationException(errorMessages1);
+        return true;
     }
 
     @Override
     public User findByID(Long id) throws ValidationException {
-        return null;
+        if (userRepository.findById(id).isEmpty()) {
+            throw new ValidationException(List.of(ErrorMessage.builder().message("User not found").build()));
+        }
+        return userRepository.findById(id).get();
     }
 
     @Override
     public Long findIdByEmail(String email) throws ValidationException {
-        return null;
+        if (userRepository.findByEmail(email).isEmpty()) {
+            throw new ValidationException(List.of(ErrorMessage.builder().message("Email not found").build()));
+        }
+        return userRepository.findByEmail(email).get().getId();
     }
 
     @Override
     public Boolean deleteUser(Long id) throws ValidationException {
-        return null;
+        List<ErrorMessage> errorMessages1 = new ArrayList<>();
+        if (userRepository.findById(id).isEmpty()) {
+            errorMessages1.add(ErrorMessage.builder().message("User not found").build());
+        }
+        if (errorMessages1.size() > 0) {
+            throw new ValidationException(errorMessages1);
+        }
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }
