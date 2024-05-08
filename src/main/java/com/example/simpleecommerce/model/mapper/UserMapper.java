@@ -5,6 +5,7 @@ package com.example.simpleecommerce.model.mapper;
 //import com.example.simpleecommerce.model.dto.request.UserRegisterRequest;
 import com.example.simpleecommerce.model.entity.User;
 import com.example.simpleecommerce.model.dto.UserRegisterRequest;
+import com.example.simpleecommerce.model.response.UserResponse;
 
 public class UserMapper {
 //    public static User UserDtoResponsetoEntity(UserDtoResponse userDto) {
@@ -45,4 +46,13 @@ public class UserMapper {
 //        userDtoResponse.setRole(user.getRoleUser());
 //        return userDtoResponse;
 //    }
+
+    public static UserResponse UserToUserResponse(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .build();
+    }
 }

@@ -84,4 +84,34 @@ public class UserController {
             return ResponseEntity.ok(response);
         }
     }
+
+//    @GetMapping("/rest/user/{email}")
+//    public ResponseEntity<?> getUserByEmail(@PathVariable String email)
+//    {
+//        Response<User> response = new Response<>();
+//        try {
+//            User user = userService.findByEmail(email);
+//            response.setResult(user);
+//            response.setMessage("User has been found");
+//            return ResponseEntity.ok(response);
+//        } catch (jakarta.validation.ValidationException e){
+//            response.setMessage("User has not been found");
+//            return ResponseEntity.ok(response);
+//        }
+//    }
+
+    @GetMapping("/rest/user/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id)
+    {
+        Response<User> response = new Response<>();
+        try {
+            User user = userService.findByID(id);
+            response.setResult(user);
+            response.setMessage("User has been found");
+            return ResponseEntity.ok(response);
+        } catch (jakarta.validation.ValidationException e){
+            response.setMessage("User has not been found");
+            return ResponseEntity.ok(response);
+        }
+    }
 }
