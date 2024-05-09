@@ -1,5 +1,6 @@
 package com.example.simpleecommerce.service.impl;
 
+import com.example.simpleecommerce.exception.ValidationException;
 import com.example.simpleecommerce.model.entity.Product;
 import com.example.simpleecommerce.repository.ProductRepository;
 import com.example.simpleecommerce.service.ProductService;
@@ -31,12 +32,17 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.findById(id).isEmpty())
             errorMessages.add(ErrorMessage.builder().message("Product not found").build());
         if (errorMessages.size() > 0)
-            throw new RuntimeException("Product not found");
+            throw new ValidationException(errorMessages);
         productRepository.deleteById(id);
     }
 
     @Override
     public Product findById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        List<ErrorMessage> errorMessages = new ArrayList<>();
+        if (productRepository.findById(id).isEmpty())
+            errorMessages.add(ErrorMessage.builder().message("Product not found").build());
+        if (errorMessages.size() > 0)
+            throw new ValidationException(errorMessages);
+        return productRepository.findById(id).get();
     }
 }

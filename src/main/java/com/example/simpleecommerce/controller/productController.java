@@ -6,6 +6,7 @@ import com.example.simpleecommerce.model.request.ProductRequest;
 import com.example.simpleecommerce.model.response.ErrorRes;
 import com.example.simpleecommerce.model.response.ProductResponse;
 import com.example.simpleecommerce.service.ProductService;
+import com.example.simpleecommerce.service.UserService;
 import com.example.simpleecommerce.util.Response;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class productController {
     private ProductService productService;
+    private UserService userService;
 
     @PostMapping("/rest/product/new")
     public ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest)
@@ -28,6 +30,7 @@ public class productController {
         Response<String> productDtoResponseResponse = new Response<>();
         try {
             Product product = ProductMapper.ProductRequestToEntity(productRequest);
+            product.setUser(userService.findByID(productRequest.getUserId()));
             productService.saveProduct(product);
             productDtoResponseResponse.setMessage("Product has been added");
             return ResponseEntity.ok(productDtoResponseResponse);
@@ -64,9 +67,9 @@ public class productController {
 
     @GetMapping("/rest/product/{id}")
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
-        Response<Product> productDtoResponseResponse = new Response<>();
+        Response<ProductResponse> productDtoResponseResponse = new Response<>();
         try {
-            productDtoResponseResponse.setResult(productService.findById(id));
+            productDtoResponseResponse.setResult(ProductMapper.ProductEntityToResponse(productService.findById(id)));
             return ResponseEntity.ok(productDtoResponseResponse);
         } catch (BadCredentialsException e) {
             ErrorRes errorResponse = new ErrorRes(HttpStatus.BAD_REQUEST, "Invalid product");

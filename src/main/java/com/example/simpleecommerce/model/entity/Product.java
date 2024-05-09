@@ -24,4 +24,7 @@ public class Product {
     private Double price;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Order> orders;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

@@ -31,4 +31,14 @@ public class ProductMapper {
 
         return responses;
     }
+
+    public static ProductResponse ProductEntityToResponse(Product product) {
+        ProductResponse response = new ProductResponse();
+        response.setId(product.getId());
+        response.setName(product.getName());
+        response.setDescription(product.getDescription());
+        response.setPrice(product.getPrice());
+        response.setOrders(OrderMapper.mapOrderToOrderResponse(product.getOrders()));
+        return response;
+    }
 }

@@ -16,4 +16,7 @@ public class ProductRequest {
     private String description;
     @NonNull
     private Double price;
+    @NonNull
+    @NotBlank(message = "User Id cannot be empty")
+    private Long userId;
 }
