@@ -40,11 +40,11 @@ public class productController {
         }
     }
 
-    @GetMapping("/rest/product/all")
-    public ResponseEntity<?> getAllProduct() {
+    @GetMapping("/rest/product/all/{id}")
+    public ResponseEntity<?> getAllProduct(@PathVariable Long id) {
         Response<List<ProductResponse>> productDtoResponseResponse = new Response<>();
         try {
-            productDtoResponseResponse.setResult(ProductMapper.ProductEntityToResponse(productService.getAllProduct()));
+            productDtoResponseResponse.setResult(ProductMapper.ProductEntityToResponse(productService.getAllProduct(id)));
             return ResponseEntity.ok(productDtoResponseResponse);
         } catch (BadCredentialsException e) {
             ErrorRes errorResponse = new ErrorRes(HttpStatus.BAD_REQUEST, "Invalid product");
