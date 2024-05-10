@@ -84,6 +84,7 @@ public class productController {
         Response<String> productDtoResponseResponse = new Response<>();
         try {
             Product product = ProductMapper.ProductRequestToEntity(productRequest);
+            product.setUser(userService.findByID(productRequest.getUserId()));
             product.setId(id);
             productService.saveProduct(product);
             productDtoResponseResponse.setMessage("Product has been updated");
