@@ -42,6 +42,7 @@ public class productController {
 
     @GetMapping("/rest/product/all/{id}")
     public ResponseEntity<?> getAllProduct(@PathVariable Long id) {
+        //khe
         Response<List<ProductResponse>> productDtoResponseResponse = new Response<>();
         try {
             productDtoResponseResponse.setResult(ProductMapper.ProductEntityToResponse(productService.getAllProduct(id)));
