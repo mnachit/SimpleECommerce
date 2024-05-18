@@ -38,6 +38,7 @@ public class SecurityConfig  {
         http.csrf(csrf -> csrf.disable())
                 .authorizeRequests()
                 .requestMatchers("/api/v1/rest/auth/**").permitAll()
+                .requestMatchers("/api/v1/rest/update/**").permitAll()
                 .requestMatchers("/api/v1/evenement/new").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

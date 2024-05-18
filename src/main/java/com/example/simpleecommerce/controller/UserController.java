@@ -6,6 +6,7 @@ import com.example.simpleecommerce.model.entity.User;
 import com.example.simpleecommerce.model.mapper.UserMapper;
 import com.example.simpleecommerce.model.dto.UserRegisterRequest;
 import com.example.simpleecommerce.model.response.ErrorRes;
+import com.example.simpleecommerce.model.response.UserResponse;
 import com.example.simpleecommerce.service.UserService;
 import com.example.simpleecommerce.util.Response;
 import lombok.AllArgsConstructor;
@@ -69,13 +70,14 @@ public class UserController {
         }
     }
 
-    @PutMapping("/rest/update/user/{id}")
+    @PostMapping("/rest/update/user/{id}")
     public ResponseEntity<?> updateUser(@RequestBody UserRegisterRequest userRegisterRequest, @PathVariable Long id)
     {
         Response<String> response = new Response<>();
         try {
             User user = UserMapper.UserRegisterRequestToEntity(userRegisterRequest);
             user.setId(id);
+
             userService.updateUser(user);
             response.setMessage("User has been updated");
             return ResponseEntity.ok(response);
@@ -103,10 +105,10 @@ public class UserController {
     @GetMapping("/rest/user/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id)
     {
-        Response<User> response = new Response<>();
+        Response<UserResponse> response = new Response<>();
         try {
             User user = userService.findByID(id);
-            response.setResult(user);
+            response.setResult(UserMapper.UserToUserResponse(user));
             response.setMessage("User has been found");
             return ResponseEntity.ok(response);
         } catch (jakarta.validation.ValidationException e){

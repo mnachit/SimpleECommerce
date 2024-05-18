@@ -30,8 +30,8 @@ public class JwtUtil {
         Claims claims = Jwts.claims().setSubject(user.getEmail());
         claims.put("id", user.getId());
         claims.put("email", user.getEmail());
-        claims.put("firstName",user.getFirstName());
-        claims.put("lastName",user.getLastName());
+//        claims.put("firstName",user.getFirstName());
+//        claims.put("lastName",user.getLastName());
         claims.put("username",user.getUsername());
         claims.put("role",user.getRoleUser());
         claims.put("password",user.getPassword());

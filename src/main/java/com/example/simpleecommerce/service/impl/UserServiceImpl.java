@@ -70,6 +70,11 @@ public class UserServiceImpl implements UserService {
             errorMessages.add(ErrorMessage.builder().message("Username already exists").build());
         if (errorMessages.size() > 0)
             throw new ValidationException(errorMessages);
+        if (user.getRoleUser() == null)
+            user.setRoleUser(userRepository.findById(user.getId()).get().getRoleUser());
+        if (user.getPassword() == null)
+            user.setPassword(userRepository.findById(user.getId()).get().getPassword());
+        else if (user.getPassword() != null)
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Date date = new Date();
         user.setUpdatedAt(date);
