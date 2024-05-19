@@ -4,9 +4,13 @@ import com.example.simpleecommerce.exception.ValidationException;
 import com.example.simpleecommerce.model.entity.User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface UserService {
     public User saveUserRoleAdmin(User user) throws ValidationException;
+    public Boolean updateRoleUser(Long id, User user) throws ValidationException;
+
     public boolean isPasswordValid(String rawPassword, String encodedPassword);
     public User updateUser(User user) throws ValidationException;
     public User findByEmail(String email) throws ValidationException;
@@ -14,6 +18,8 @@ public interface UserService {
     public boolean findByEmailAndPassword(String email, String password) throws ValidationException;
 
     public User findByID(Long id) throws ValidationException;
+
+    public List<User> findAllUser(long id) throws ValidationException;
 
     public Long findIdByEmail(String email) throws ValidationException;
 

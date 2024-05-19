@@ -8,11 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
-    private Long id;
-    private String firstName;
-    private String lastName;
+public class UserResponseRole {
     private String email;
-    private String phone;
     private RoleUser roleUser;
 }

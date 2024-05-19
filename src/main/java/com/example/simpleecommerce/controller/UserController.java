@@ -7,6 +7,7 @@ import com.example.simpleecommerce.model.mapper.UserMapper;
 import com.example.simpleecommerce.model.dto.UserRegisterRequest;
 import com.example.simpleecommerce.model.response.ErrorRes;
 import com.example.simpleecommerce.model.response.UserResponse;
+import com.example.simpleecommerce.model.response.UserResponseRole;
 import com.example.simpleecommerce.service.UserService;
 import com.example.simpleecommerce.util.Response;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -113,6 +116,37 @@ public class UserController {
             return ResponseEntity.ok(response);
         } catch (jakarta.validation.ValidationException e){
             response.setMessage("User has not been found");
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @GetMapping("/rest/users/{id}")
+    public ResponseEntity<?> getUsers(@PathVariable Long id)
+    {
+        Response<List<UserResponse>> response = new Response<>();
+        try {
+            List<User> users = userService.findAllUser(id);
+            response.setResult(UserMapper.UserListToUserResponseList(users));
+            response.setMessage("User has been found");
+            return ResponseEntity.ok(response);
+        } catch (jakarta.validation.ValidationException e){
+            response.setMessage("User has not been found");
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @PostMapping("/rest/update/role/user/{id}")
+    public ResponseEntity<Response<String>> UppdatRoleUser(@PathVariable Long id, @RequestBody UserResponseRole user)
+    {
+        Response<String> response = new Response<>();
+        try {
+        User user1 = userService.findByEmail(user.getEmail());
+        user1.setRoleUser(user.getRoleUser());
+        userService.updateRoleUser(id,user1);
+        response.setMessage("Role User has been updated");
+        return ResponseEntity.ok(response);
+        } catch (jakarta.validation.ValidationException e){
+            response.setError("User has not been found");
             return ResponseEntity.ok(response);
         }
     }

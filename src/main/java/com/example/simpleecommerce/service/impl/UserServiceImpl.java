@@ -55,6 +55,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Boolean updateRoleUser(Long id, User user) throws ValidationException {
+        if (userRepository.findById(id).isEmpty() && userRepository.findById(id).get().getRoleUser().toString().equals("ADMIN")) {
+            throw new ValidationException(List.of(ErrorMessage.builder().message("User not found").build()));
+        }
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
     public boolean isPasswordValid(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
@@ -66,8 +75,8 @@ public class UserServiceImpl implements UserService {
             errorMessages.add(ErrorMessage.builder().message("User not found").build());
         if (userRepository.findByEmail(user.getEmail()).isPresent() && userRepository.findByEmail(user.getEmail()).get().getId() != user.getId())
             errorMessages.add(ErrorMessage.builder().message("Email already exists").build());
-        if (userRepository.findByUsername(user.getUsername()).isPresent() && userRepository.findByUsername(user.getUsername()).get().getId() != user.getId())
-            errorMessages.add(ErrorMessage.builder().message("Username already exists").build());
+//        if (userRepository.findByUsername(user.getUsername()).isPresent() && userRepository.findByUsername(user.getUsername()).get().getId() != user.getId())
+//            errorMessages.add(ErrorMessage.builder().message("Username already exists").build());
         if (errorMessages.size() > 0)
             throw new ValidationException(errorMessages);
         if (user.getRoleUser() == null)
@@ -112,6 +121,11 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException(List.of(ErrorMessage.builder().message("User not found").build()));
         }
         return userRepository.findById(id).get();
+    }
+
+    @Override
+    public List<User> findAllUser(long id) throws ValidationException {
+        return userRepository.findAllUsersExceptId(id);
     }
 
     @Override
