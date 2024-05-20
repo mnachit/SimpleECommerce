@@ -78,6 +78,18 @@ public class productController {
         }
     }
 
+    @GetMapping("/rest/products")
+    public ResponseEntity<?> getAllProducts() {
+        Response<List<ProductResponse>> productDtoResponseResponse = new Response<>();
+        try {
+            productDtoResponseResponse.setResult(ProductMapper.ProductEntityToResponse(productService.getAllProducts()));
+            return ResponseEntity.ok(productDtoResponseResponse);
+        } catch (BadCredentialsException e) {
+            ErrorRes errorResponse = new ErrorRes(HttpStatus.BAD_REQUEST, "Invalid product");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+    }
+
     @PutMapping("/rest/product/{id}")
     public ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest, @PathVariable Long id)
     {
